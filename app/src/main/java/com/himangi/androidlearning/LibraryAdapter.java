@@ -15,12 +15,12 @@ import java.util.List;
  * Created by himangi.
  */
 
-public class LibraryAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class LibraryAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<LibraryDetails> mLibraryList;
     private Context context;
 
-    public LibraryAdapter(List<LibraryDetails> mLibraryList, Context context) {
+    LibraryAdapter(List<LibraryDetails> mLibraryList, Context context) {
         this.mLibraryList = mLibraryList;
         this.context = context;
     }
@@ -34,7 +34,7 @@ public class LibraryAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         viewHolder.txtLibTitle.setText(mLibraryList.get(position).getLibName());
         viewHolder.txtLibURL.setText(mLibraryList.get(position).getLibLinkURL());
@@ -44,7 +44,7 @@ public class LibraryAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
             public void onClick(View v) {
 
                 Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(mLibraryList.get(position).getLibLinkURL()));
+                        Uri.parse(mLibraryList.get(holder.getAdapterPosition()).getLibLinkURL()));
                 context.startActivity(intent);
 
             }
@@ -56,11 +56,11 @@ public class LibraryAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mLibraryList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    private class ViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView txtLibTitle, txtLibURL;
+        TextView txtLibTitle, txtLibURL;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             txtLibTitle = (TextView) itemView.findViewById(R.id.txtLibTitle);

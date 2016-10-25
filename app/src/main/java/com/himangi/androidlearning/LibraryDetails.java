@@ -4,28 +4,30 @@ package com.himangi.androidlearning;
  * Created by himangi.
  */
 
-public class LibraryDetails {
+class LibraryDetails {
 
     private String libLinkURL;
     private String libName;
 
-    public LibraryDetails(String libLinkURL, String libName) {
+    LibraryDetails(String libLinkURL, String libName) {
         this.libLinkURL = libLinkURL;
         this.libName = libName;
     }
 
-    public String getLibLinkURL() {
+    String getLibLinkURL() {
         return libLinkURL;
     }
 
+    @SuppressWarnings("unused")
     public void setLibLinkURL(String libLinkURL) {
         this.libLinkURL = libLinkURL;
     }
 
-    public String getLibName() {
+    String getLibName() {
         return libName;
     }
 
+    @SuppressWarnings("unused")
     public void setLibName(String libName) {
         this.libName = libName;
     }

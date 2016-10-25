@@ -2,6 +2,7 @@ package com.himangi.androidlearning;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -53,9 +54,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private static final String[] SCOPES = {SheetsScopes.DRIVE,SheetsScopes.SPREADSHEETS};
 
     private ProgressDialog mProgress;
-    private MakeRequestTask makeRequestTask;
 
     private RecyclerView mRvLibraryList;
+
+    private String TAG = "AndroidLearning";
 
 
     @Override
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Calling Google Sheets API ...");
+        mProgress.setMessage(getString(R.string.txt_callingGoogleSheetAPI));
 
         mRvLibraryList = (RecyclerView) findViewById(R.id.rvLibList);
 
@@ -100,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (!isDeviceOnline()) {
-            Log.d("TestApp", "No network connection available.");
+            Log.d(TAG, getString(R.string.txt_no_internet));
         } else {
-            makeRequestTask = new MakeRequestTask(mCredential);
+            MakeRequestTask makeRequestTask = new MakeRequestTask(mCredential);
             makeRequestTask.execute();
         }
     }
@@ -136,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Google account (via Contacts).",
+                    getString(R.string.txt_need_contact_permission),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
         }
@@ -161,9 +163,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    Log.d("TestApp",
-                            "This app requires Google Play Services. Please install " +
-                                    "Google Play Services on your device and relaunch this app.");
+                    Log.d(TAG, getString(R.string.txt_app_required_googleplayService));
                 } else {
                     getResultsFromApi();
                 }
@@ -287,11 +287,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-//        Dialog dialog = apiAvailability.getErrorDialog(
-//                ContentTestActivity.this,
-//                connectionStatusCode,
-//                REQUEST_GOOGLE_PLAY_SERVICES);
-        //dialog.show();
+        Dialog dialog = apiAvailability.getErrorDialog(
+                MainActivity.this,
+                connectionStatusCode,
+                REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
     }
 
     @Override
@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.sheets.v4.Sheets.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google Sheets API Android Quickstart")
+                    .setApplicationName(getApplicationInfo().className)
                     .build();
         }
 
@@ -381,6 +381,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                         results.add(ld);
                     } catch (Exception e) {
 
+                        e.printStackTrace();
                     }
                 }
             }
@@ -399,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             mProgress.hide();
             if (output == null || output.size() == 0) {
 
-                Log.d("TestApp", "No result resturn");
+                Log.d(TAG, "No result resturn");
             } else {
 
                 LibraryAdapter libraryAdapter = new LibraryAdapter(output,getApplicationContext());
@@ -423,10 +424,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                                     .REQUEST_AUTHORIZATION);
                 } else {
 
-                    Log.d("TestApp", "The following error occurred:\n" + mLastError.getMessage());
+                    Log.d(TAG, "The following error occurred:\n" + mLastError.getMessage());
                 }
             } else {
-                Log.d("TestApp", "Request cancelled.");
+                Log.d(TAG, "Request cancelled.");
             }
         }
     }
