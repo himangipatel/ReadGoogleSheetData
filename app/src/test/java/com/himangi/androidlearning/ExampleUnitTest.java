@@ -1,4 +1,4 @@
-package com.himangi.voicenotes;
+package com.himangi.androidlearning;
 
 import org.junit.Test;
 

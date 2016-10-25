@@ -1,4 +1,4 @@
-package com.himangi.voicenotes;
+package com.himangi.androidlearning;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
